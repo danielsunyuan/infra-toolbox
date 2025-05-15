@@ -22,7 +22,6 @@ This repository contains Ansible playbooks, roles, and scripts for automating in
 │   │   └── workers.yml          # Worker node variables
 │   ├── inventory/               # Inventory files
 │   │   ├── example.ini          # Example inventory template
-│   │   └── ovens/               # Environment-specific inventory
 │   ├── playbooks/               # Ansible playbooks
 │   │   ├── install-docker.yml   # Docker installation
 │   │   ├── install-kubernetes.yml # Kubernetes deployment
@@ -31,7 +30,7 @@ This repository contains Ansible playbooks, roles, and scripts for automating in
 │   ├── requirements.txt         # Ansible dependencies
 │   └── scripts/
 │       └── bootstrap.sh         # Server bootstrapping script
-```
+```g
 
 ## Prerequisites
 
@@ -44,7 +43,7 @@ This repository contains Ansible playbooks, roles, and scripts for automating in
 
 1. Clone this repository:
    ```
-   git clone https://github.com/yourusername/infra-toolbox.git
+   git clone https://github.com/danielsunyuan/infra-toolbox.git
    cd infra-toolbox
    ```
 
