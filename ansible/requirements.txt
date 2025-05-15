@@ -1,0 +1,11 @@
+roles:
+  - name: nvidia.nvidia_driver
+  - name: nvidia.nvidia_docker
+    src: https://github.com/NVIDIA/ansible-role-nvidia-docker
+    scm: git
+
+collections:
+  - name: community.docker
+  - name: https://github.com/kubernetes-sigs/kubespray
+    type: git
+    version: master

@@ -1,0 +1,55 @@
+name: Deploy Infra to Oven Nodes
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Bootstrap + Full Infra Stack
+    runs-on: [self-hosted, control]
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Python + venv + base tools
+        run: |
+          sudo apt update
+          sudo apt install -y python3 python3-pip python3-venv sshpass curl git
+
+      - name: Create virtualenv and install Ansible
+        run: |
+          python3 -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
+          pip install ansible
+
+      - name: Install Ansible Galaxy dependencies
+        run: |
+          source .venv/bin/activate
+          ansible-galaxy install -r ansible/requirements.txt -p ansible/roles
+          ansible-galaxy collection install -r ansible/requirements.txt -p ansible/collections
+
+      - name: Install NVIDIA GPU Drivers
+        run: |
+          source .venv/bin/activate
+          ansible-playbook -i ansible/ovens/inventory.ini ansible/playbooks/install-nvidia-drivers.yml
+
+      - name: Install Docker (on applicable nodes)
+        run: |
+          source .venv/bin/activate
+          ansible-playbook -i ansible/ovens/inventory.ini ansible/playbooks/install-docker.yml
+
+      - name: Install NVIDIA Container Toolkit (NCTK)
+        run: |
+          source .venv/bin/activate
+          ansible-playbook -i ansible/ovens/inventory.ini ansible/playbooks/install-nctk.yml
+
+      - name: Install Kubernetes with Kubespray
+        run: |
+          source .venv/bin/activate
+          ansible-playbook -i ansible/ovens/inventory.ini ansible/playbooks/install-kubernetes.yml --become --become-user=root

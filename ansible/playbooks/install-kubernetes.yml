@@ -1,0 +1,7 @@
+- name: Install Kubernetes with Kubespray
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Run Kubespray cluster playbook
+      ansible.builtin.import_playbook: kubernetes_sigs.kubespray.cluster

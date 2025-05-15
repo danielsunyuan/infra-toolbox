@@ -1,0 +1,7 @@
+- name: Install Docker on oven nodes
+  hosts: ovens
+  become: true
+  collections:
+    - community.docker
+  roles:
+    - role: docker_install
