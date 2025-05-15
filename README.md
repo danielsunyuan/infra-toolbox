@@ -21,7 +21,7 @@ This repository contains Ansible playbooks, roles, and scripts for automating in
 │   │   ├── pxe.yml              # PXE server variables
 │   │   └── workers.yml          # Worker node variables
 │   ├── inventory/               # Inventory files
-│   │   ├── example.ini          # Example inventory template
+│   │   └── example.ini          # Example inventory template
 │   ├── playbooks/               # Ansible playbooks
 │   │   ├── install-docker.yml   # Docker installation
 │   │   ├── install-kubernetes.yml # Kubernetes deployment
