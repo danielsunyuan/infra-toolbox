@@ -1,1 +1,6 @@
 ansible/inventory/ovens
+ansible/inventory/atlas
+ansible/roles/*
+ansible/collections/*
+.venv
+.claude
