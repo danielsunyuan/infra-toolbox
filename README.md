@@ -54,6 +54,12 @@ This repository contains Ansible playbooks, roles, and scripts for automating in
 
 ## Usage
 
+Full Stack Full Automated Control
+```
+make full-stack
+```
+
+
 ```
 source .venv/bin/activate
 ```
@@ -61,8 +67,11 @@ source .venv/bin/activate
 
 ```
 # Initial Bootstrap for dev of the cluster HPC
-ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook   -i ansible/inventory/inventory.ini   ansible/playbooks/ssh-bootstrap.yml   --ask-pass -K
-ansible-playbook -i ansible/inventory/inventory.ini ansible/playbooks/ssh-bootstrap.yml -e "enable_passwordless_sudo=true"
+ANSIBLE_HOST_KEY_CHECKING=False \
+ansible-playbook \
+  -i ansible/inventory/inventory.ini \
+  ansible/playbooks/ssh-bootstrap.yml \
+  --ask-pass -K
 
 # Lockdown for Resolving the Cluster to Prod
 ansible-playbook -i ansible/inventory/inventory.ini ansible/playbooks/lockdown.yml
@@ -73,7 +82,6 @@ ansible-playbook -i ansible/inventory/inventory.ini ansible/playbooks/lockdown.y
 To install Docker on target servers:
 
 ```
-ansible-playbook -i inventory/inventory.ini playbooks/install-docker.yml
 ansible-playbook -i ansible/inventory/inventory.ini ansible/playbooks/install-docker.yml
 ```
 
@@ -91,14 +99,12 @@ ansible-playbook -i inventory/inventory.ini playbooks/install-kubernetes.yml
 To install NVIDIA drivers:
 
 ```
-cd ansible
 ansible-playbook -i ansible/inventory/inventory.ini ansible/playbooks/install-nvidia-drivers.yml
 ```
 
 To install NVIDIA Container Toolkit:
 
 ```
-cd ansible
 ansible-playbook -i ansible/nventory/inventory.ini playbooks/install-nctk.yml
 ```
 

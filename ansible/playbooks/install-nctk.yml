@@ -1,5 +1,17 @@
-- name: Install NVIDIA Container Toolkit on ovens
-  hosts: all
+- name: Install NVIDIA Container Toolkit
+  hosts: workers
   become: true
+
+  vars:
+    nvidia_docker_use_nvidia_repo: true
+    nvidia_docker_skip_reboot: false
+    nvidia_docker_containerd: false
+
   roles:
     - nvidia.nvidia_docker
+
+  handlers:
+    - name: restart docker
+      service:
+        name: docker
+        state: restarted

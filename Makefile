@@ -2,7 +2,7 @@
 
 ANSIBLE=ansible-playbook -i ansible/inventory/inventory.ini
 
-.PHONY: bootstrap docker nvidia kube lockdown
+.PHONY: bootstrap docker nvidia nctk lockdown ping full-stack
 
 bootstrap:
 	ANSIBLE_HOST_KEY_CHECKING=False \
@@ -22,3 +22,6 @@ lockdown:
 
 ping:
 	ansible -i ansible/inventory/inventory.ini all -m ping
+
+full-stack: bootstrap docker nvidia nctk lockdown
+	@echo "✅ Full stack completed across oven nodes."

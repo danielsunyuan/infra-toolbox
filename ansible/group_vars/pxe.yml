@@ -1,7 +1,0 @@
-ubuntu_version: "22.04"
-ubuntu_codename: "jammy"
-ubuntu_netboot_url: "http://archive.ubuntu.com/ubuntu/dists/{{ ubuntu_codename }}/main/installer-amd64/current/legacy-images/netboot/netboot.tar.gz"
-
-tftp_root: "/srv/tftp"
-preseed_url: "http://192.168.1.1/preseed/ubuntu.cfg"
-pxe_interface: "eth0"
