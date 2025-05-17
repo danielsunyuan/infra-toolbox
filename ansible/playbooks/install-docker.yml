@@ -1,7 +1,15 @@
 - name: Install Docker on oven nodes
-  hosts: ovens
+  hosts: all
   become: true
-  collections:
-    - community.docker
   roles:
-    - role: docker_install
+    - geerlingguy.docker
+
+  post_tasks:
+    - name: Check Docker version
+      command: docker --version
+      register: docker_version
+      changed_when: false
+
+    - name: Display Docker version
+      debug:
+        msg: "Docker installed: {{ docker_version.stdout }}"

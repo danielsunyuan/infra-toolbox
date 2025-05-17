@@ -1,5 +1,5 @@
 - name: Install NVIDIA Container Toolkit on ovens
-  hosts: ovens
+  hosts: all
   become: true
   roles:
     - nvidia.nvidia_docker

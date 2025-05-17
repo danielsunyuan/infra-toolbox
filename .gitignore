@@ -4,3 +4,4 @@ ansible/roles/*
 ansible/collections/*
 .venv
 .claude
+notes.txt

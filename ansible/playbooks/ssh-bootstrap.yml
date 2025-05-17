@@ -1,0 +1,69 @@
+- name: Fully bootstrap Ansible access
+  hosts: all
+  gather_facts: false
+  become: true
+
+  vars:
+    ssh_key_path: "{{ lookup('env', 'HOME') + '/.ssh/id_ed25519' }}"
+    ssh_pub_path: "{{ ssh_key_path }}.pub"
+    enable_passwordless_sudo: true
+    update_control_hosts_file: true  # Set to false to disable
+
+  pre_tasks:
+    - name: Ensure .ssh directory exists locally
+      file:
+        path: "{{ ssh_key_path | dirname }}"
+        state: directory
+        mode: '0700'
+      delegate_to: localhost
+      run_once: true
+
+    - name: Generate SSH key pair if not present
+      command: ssh-keygen -t ed25519 -f "{{ ssh_key_path }}" -N "" -C "ansible-bootstrap"
+      args:
+        creates: "{{ ssh_key_path }}"
+      delegate_to: localhost
+      run_once: true
+
+    - name: Fix key file ownership
+      file:
+        path: "{{ ssh_key_path }}"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0600'
+      delegate_to: localhost
+      run_once: true
+
+  tasks:
+    - name: Ensure remote ~/.ssh directory exists
+      file:
+        path: "/home/{{ ansible_user }}/.ssh"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0700'
+
+    - name: Inject control node public key to remote authorized_keys
+      authorized_key:
+        user: "{{ ansible_user }}"
+        key: "{{ lookup('file', ssh_pub_path) }}"
+        state: present
+
+    - name: Enable passwordless sudo (dev only)
+      lineinfile:
+        path: /etc/sudoers.d/{{ ansible_user }}
+        create: yes
+        mode: '0440'
+        line: "{{ ansible_user }} ALL=(ALL) NOPASSWD: ALL"
+      when: enable_passwordless_sudo | bool
+
+    - name: Add hostname entries to control node's /etc/hosts
+      become: true
+      delegate_to: localhost
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ hostvars[item].ansible_host }} {{ item }}"
+        regexp: "^{{ hostvars[item].ansible_host }}\\s+{{ item }}$"
+        state: present
+      loop: "{{ groups['all'] }}"
+      when: update_control_hosts_file | bool

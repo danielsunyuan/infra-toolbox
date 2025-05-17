@@ -30,7 +30,7 @@ This repository contains Ansible playbooks, roles, and scripts for automating in
 │   ├── requirements.txt         # Ansible dependencies
 │   └── scripts/
 │       └── bootstrap.sh         # Server bootstrapping script
-```g
+```
 
 ## Prerequisites
 
@@ -49,18 +49,32 @@ This repository contains Ansible playbooks, roles, and scripts for automating in
 
 2. Install Ansible requirements:
    ```
-   ansible-galaxy install -r ansible/requirements.txt
+   ansible-galaxy install -r ansible/requirements.yml
    ```
 
 ## Usage
+
+```
+source .venv/bin/activate
+```
+
+
+```
+# Initial Bootstrap for dev of the cluster HPC
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook   -i ansible/inventory/inventory.ini   ansible/playbooks/ssh-bootstrap.yml   --ask-pass -K
+ansible-playbook -i ansible/inventory/inventory.ini ansible/playbooks/ssh-bootstrap.yml -e "enable_passwordless_sudo=true"
+
+# Lockdown for Resolving the Cluster to Prod
+ansible-playbook -i ansible/inventory/inventory.ini ansible/playbooks/lockdown.yml
+```
 
 ### Docker Installation
 
 To install Docker on target servers:
 
 ```
-cd ansible
-ansible-playbook -i inventory/your-inventory.ini playbooks/install-docker.yml
+ansible-playbook -i inventory/inventory.ini playbooks/install-docker.yml
+ansible-playbook -i ansible/inventory/inventory.ini ansible/playbooks/install-docker.yml
 ```
 
 ### Kubernetes Deployment
@@ -69,7 +83,7 @@ To deploy a Kubernetes cluster using Kubespray:
 
 ```
 cd ansible
-ansible-playbook -i inventory/your-inventory.ini playbooks/install-kubernetes.yml
+ansible-playbook -i inventory/inventory.ini playbooks/install-kubernetes.yml
 ```
 
 ### NVIDIA Setup
@@ -78,14 +92,14 @@ To install NVIDIA drivers:
 
 ```
 cd ansible
-ansible-playbook -i inventory/your-inventory.ini playbooks/install-nvidia-drivers.yml
+ansible-playbook -i ansible/inventory/inventory.ini ansible/playbooks/install-nvidia-drivers.yml
 ```
 
 To install NVIDIA Container Toolkit:
 
 ```
 cd ansible
-ansible-playbook -i inventory/your-inventory.ini playbooks/install-nctk.yml
+ansible-playbook -i ansible/nventory/inventory.ini playbooks/install-nctk.yml
 ```
 
 ### Bootstrap Script

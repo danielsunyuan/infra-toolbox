@@ -1,5 +1,5 @@
 - name: Install NVIDIA GPU drivers on oven nodes
-  hosts: ovens
+  hosts: all
   become: true
   roles:
     - nvidia.nvidia_driver

@@ -1,23 +1,33 @@
-# Nvidia Drivers
+# ====================================
+# 🍳 Oven Node Configuration (workers)
+# ====================================
+
+# ---- NVIDIA Driver Installation ----
 nvidia_driver_branch: "535"
 cuda_version: "12.4"
 nvidia_driver_ubuntu_install_from_cuda_repo: true
-nvidia_driver_persistence_mode: true
 nvidia_driver_dkms: true
+nvidia_driver_persistence_mode: true
 nvidia_driver_skip_reboot: false
 
-# Kubernetes
-kube_network_plugin: calico
-container_manager: containerd
+# ---- NVIDIA Container Toolkit ----
+nvidia_docker_use_nvidia_repo: true
+nvidia_docker_skip_reboot: false
+nvidia_docker_containerd: false  # Set to true if switching from Docker to containerd
 
-# Docker installation settings for oven nodes
+# ---- Docker Installation ----
+install_docker: true                  # Install rootful Docker
+install_rootless_docker: false       # Explicitly disable rootless setup
 docker_edition: "ce"
+docker_apt_package: "docker-ce"
 docker_package: "docker-ce"
 docker_install_compose_plugin: true
 docker_users:
-  - oven
+  - "{{ ansible_user }}"             # Dynamically resolved at runtime
 
-# NVIDIA Container Toolkit install vars
-nvidia_docker_use_nvidia_repo: true
-nvidia_docker_skip_reboot: false
-nvidia_docker_containerd: false   # Set to true if you're using containerd instead of Docker
+# ---- SSH Bootstrap ----
+update_control_hosts_file: true
+
+# ---- Future: Kubernetes Preparation (optional, ignored for now) ----
+# container_manager: containerd
+# kube_network_plugin: calico

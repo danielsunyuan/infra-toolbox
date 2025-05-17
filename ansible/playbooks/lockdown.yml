@@ -1,0 +1,19 @@
+# ansible/playbooks/lockdown.yml
+
+- name: Lock down sudo privileges (remove passwordless access)
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Remove passwordless sudo access
+      file:
+        path: /etc/sudoers.d/{{ ansible_user }}
+        state: absent
+
+    - name: (Optional) Require password for sudo again
+      lineinfile:
+        path: /etc/sudoers
+        regexp: '^{{ ansible_user }}'
+        line: '{{ ansible_user }} ALL=(ALL) ALL'
+        validate: '/usr/sbin/visudo -cf %s'
+      when: enforce_sudo_password | default(false)
